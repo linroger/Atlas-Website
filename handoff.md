@@ -1,8 +1,8 @@
 # Handoff.md
 
-**Last Updated (UTC):** 2026-08-01T18:15:27Z
-**Status:** In Progress
-**Current Focus:** Package the fully validated source in a clean Git repository, publish it, and verify the live GitHub Pages deployment.
+**Last Updated (UTC):** 2026-08-01T18:24:36Z
+**Status:** Complete
+**Current Focus:** Release complete; future work is limited to the three non-blocking production-hardening issues linked below.
 
 The terms MUST, SHOULD, and MAY in this document are interpreted as described by RFC 2119.
 
@@ -44,9 +44,9 @@ The terms MUST, SHOULD, and MAY in this document are interpreted as described by
 - [x] Run and verify one domestic MiniMax image-generation scenario — **done**; evidence: one `image-01` request returned a 1024×1024 JPEG (125,632 bytes, SHA-256 `1d616f452b7adf4749e8a10710166fe5b96751b79bb5409ec927ee60d0093455`) that visually matches the requested red paper boat scene.
 - [x] Run and verify one domestic MiniMax video-generation scenario — **done**; evidence: one `MiniMax-Hailuo-02` task returned a 512×512 H.264 MP4 at 24 fps and 5.875 seconds (145,415 bytes, SHA-256 `e8892e611298022b7268edcab1b7fe76ba1bfc69ead6a6402b5f92b018db33e7`), with 141 unique decoded frames and a visually correct contact sheet.
 - [x] Fix concrete defects and rerun all applicable gates — **done**; evidence: fixes and regression coverage in Sections 5–8; production dependency audit reports zero vulnerabilities.
-- [ ] Create and push the clean GitHub repository.
-- [ ] Configure and verify GitHub Pages.
-- [ ] Close this handoff with final evidence and residual risks.
+- [x] Create and push the clean GitHub repository — **done**; evidence: public `linroger/Atlas-Website`, `main` at `df3709f15ba8810e88392840f94f76a3366e418e`, with no inherited remote or broken local history.
+- [x] Configure and verify GitHub Pages — **done**; evidence: workflow run `30712397088` passed build/deploy and `https://linroger.github.io/Atlas-Website/` serves HTML/assets over enforced HTTPS.
+- [x] Close this handoff with final evidence and residual risks — **done**; evidence: all five `feature_list.json` scenarios pass and the maintenance backlog is captured in issues #1–#3.
 
 ## 5) Findings, Decisions, Assumptions
 
@@ -81,6 +81,9 @@ The terms MUST, SHOULD, and MAY in this document are interpreted as described by
 - **Finding:** The final re-review found three additional boundary inconsistencies: journey like/replicate actions bypassed the OAuth return-path helper, journey publication did not enforce the shared nine-photo limit or capability uniqueness, and the MiniMax repository guard derived its root from the caller's working directory. All three now use the shared redirect/limit contracts. The smoke harness derives its root from `import.meta.url` and canonicalizes existing ancestors, closing both caller-directory and macOS `/tmp` → `/private/tmp` alias bypasses; regression checks cover duplicate/over-limit publication and invocation through the alias from an unrelated directory.
 - **Assumption:** “MiniMax domestic API” means MiniMax's mainland-China API host and currently supported image/video generation endpoints. This will be falsified against official provider documentation and the existing code before requests are sent.
 - **Assumption:** “Atlas Website” should map to GitHub's valid repository slug `Atlas-Website`; the public-facing README and site title may retain the spaced name. Availability and authenticated ownership will be checked immediately before creation.
+- **Finding:** The requested repository was available and was created publicly as `linroger/Atlas-Website`. The unrelated original `.git` metadata was never used or modified; the clean staging repository contains 193 tracked source/assets files and no untracked or unstaged release content.
+- **Finding:** The initial Pages workflow succeeded but warned that older official action majors targeted deprecated Node.js 20 runtimes. Official current releases were adopted (`checkout@v7`, `setup-node@v7`, `configure-pages@v6`, `upload-pages-artifact@v5`, `deploy-pages@v5`); the follow-up workflow run completed cleanly.
+- **Decision:** Three non-blocking production follow-ups were filed rather than folded into this static release: [#1 development audit paths](https://github.com/linroger/Atlas-Website/issues/1), [#2 direct upload and media lifecycle](https://github.com/linroger/Atlas-Website/issues/2), and [#3 restart-durable/idempotent provider jobs](https://github.com/linroger/Atlas-Website/issues/3).
 
 ## 6) Issues, Mistakes, Recoveries
 
@@ -107,7 +110,7 @@ The terms MUST, SHOULD, and MAY in this document are interpreted as described by
 - **Codebase health:** The original state had 27 lint failures, an effectively undiscovered test suite, 18 dependency advisories, insecure OAuth state, a media-signing IDOR, privacy-leaking public DTOs, ambiguous paid retries, inconsistent uploads, fabricated fallback places, and no viable Pages mode. After the scoped fixes, `./init.sh` passes typecheck, lint, 38 tests, and full build; production audit is clean; static browser scenarios pass. **Verdict: resolved for this release, with separately documented backend scalability work.**
 - **MiniMax image generation:** One `image-01` create request returned a valid 1024×1024 JPEG. The bytes passed JPEG signature/file inspection and the rendered image showed the requested red paper boat on calm blue water with the provider's AI-generation label. **Verdict: resolved/passed.**
 - **MiniMax video generation:** One `MiniMax-Hailuo-02` 512P/6-second create request progressed `Preparing → Processing → Success`. The recovered H.264 MP4 is 512×512, 24 fps, 5.875 seconds, has 141 unique frame hashes, and its six-frame contact sheet shows smooth boat motion with no unexpected subject. **Verdict: resolved/passed.**
-- **GitHub Pages:** The local Pages-equivalent build and browser acceptance suite pass. Remote repository creation/deployment is the remaining half of this scenario.
+- **GitHub Pages:** The public repository is reachable, the current Pages workflow passed both jobs, HTTPS is enforced, and the live HTML, JavaScript, CSS, and ranged MP4 returned 200/206 with the expected MIME types and byte counts. **Verdict: resolved/passed.**
 
 ## 8) Verification Summary (evidence over intuition)
 
@@ -115,13 +118,14 @@ The terms MUST, SHOULD, and MAY in this document are interpreted as described by
 - **Acceptance runs:** `npm run build` passed and emitted `dist/public` plus `dist/boot.js`; its root-relative URLs and server dependency do not satisfy the GitHub Pages scenario yet.
 - **Acceptance runs:** Domestic MiniMax image and video generation both passed with validated artifacts; detailed non-secret media evidence is recorded in Sections 4 and 7.
 - **Acceptance runs:** The Pages-equivalent static build emitted the correct `/Atlas-Website/` asset prefix and no `/api/trpc`. Playwright verified Home at 1440×900 and 390×844, Explore search filtering, Tokyo detail/media, and the disabled AI Studio notice. It observed 28 successful static requests, zero API requests, and zero console errors/warnings.
+- **Acceptance runs:** GitHub Actions run `30712397088` built from commit `df3709f15ba8810e88392840f94f76a3366e418e` and completed both `build` and `deploy` successfully with the current official action runtimes. The live site returned 200 for HTML/JS/CSS and 206 for a 1,024-byte MP4 range; Pages reports workflow build mode and enforced HTTPS.
 - **Performance/latency snapshots:** The video task completed within four 10-second polling observations. Resume/retrieval of the completed task took about three seconds. Exact provider identifiers and signed URLs are intentionally omitted.
 
 ## 9) Remaining Work & Next Steps
 
-- **Open items & blockers:** GitHub authentication normalization, clean staging/secret scan, repository creation, push, Pages configuration, workflow completion, and live URL verification remain. All local and provider gates pass.
-- **Risks:** Provider calls may incur cost or take several minutes; API models/endpoints may have changed; GitHub Pages cannot run the bundled server APIs; SPA routing requires explicit Pages handling. Each risk has a bounded test in the plan.
-- **Next working interval plan:** Create and inspect the clean staging repository, confirm the authenticated target does not already exist, commit/push the verified tree, enable Pages via Actions, wait for the deployment, and smoke-test the public URL.
+- **Open items & blockers:** None for the requested release. Issues #1–#3 are production-hardening work and do not affect the read-only Pages demo.
+- **Residual risks:** GitHub Pages intentionally cannot run account, database, upload, or AI provider features; those routes fail closed with explicit read-only notices. The full backend still needs the durable-job, direct-upload/lifecycle, and development-toolchain work tracked remotely.
+- **Next working interval plan:** Select exactly one open issue, reproduce its acceptance scenario, implement it in a scoped branch, run `./init.sh` plus the relevant scenario tests, and update this handoff/progress record before merge.
 
 ## 10) Updates to This File (append-only)
 
@@ -134,3 +138,4 @@ The terms MUST, SHOULD, and MAY in this document are interpreted as described by
 - 2026-08-01T17:46:37Z: Closed all local quality gates after dependency, itinerary-sourcing, job-polling, and static-demo fixes; recorded a clean production audit, 21 passing tests, correct static artifact isolation, and desktop/mobile Playwright evidence with 28 successful requests and no API/console failures.
 - 2026-08-01T18:05:55Z: Incorporated final release-review findings: closed the media-signing IDOR with user-bound capabilities and publication checks, validated image structure/dimensions, allowlisted public journey fields, preserved OAuth return routes, enabled frontend test discovery, restricted source instrumentation to development, and revalidated 34 tests plus the exact Pages build.
 - 2026-08-01T18:15:27Z: Closed the re-review's remaining P2 items with bounded full image decoding, consistent journey-action return paths, shared publication limits and replay rejection, script-location-based repository isolation, 38 passing tests, a full build, and a clean production audit.
+- 2026-08-01T18:24:36Z: Created and pushed the clean public repository, enabled GitHub Pages, upgraded the workflow after its sole runtime-deprecation warning, verified the clean follow-up deployment and live assets, filed three scoped maintenance issues, marked all five acceptance scenarios passing, and closed the release.
