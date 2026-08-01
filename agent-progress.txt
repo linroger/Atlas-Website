@@ -1,0 +1,35 @@
+Atlas Website agent progress
+============================
+
+Project overview
+----------------
+Atlas is a React 19, TypeScript, and Vite travel website with a bundled Hono/tRPC backend. This continuity log tracks the source audit, MiniMax domestic image/video integration checks, secret-safe publication, and GitHub Pages release requested on 2026-08-02 local time.
+
+Session log
+-----------
+
+2026-08-01T17:10:07Z | branch: unavailable because existing HEAD is corrupt
+- Feature/bug: session initialization and release safety baseline.
+- Files touched: handoff.md, feature_list.json, agent-progress.txt, init.sh.
+- Work performed: captured task-scoped acceptance scenarios and established that the existing Git metadata is unusable and points to an unrelated repository. The original .git directory will remain untouched; any publication will use a clean staging repository.
+- Tests run: file inventory, git state probe, gh version probe, and gh authentication probe.
+- Result: initialization in progress. Product quality gates and provider smoke tests have not run yet.
+- Next steps: inspect the runtime architecture and existing AI integration, run locked dependency installation and baseline checks, then test one low-cost image and one low-cost video request.
+
+2026-08-01T17:46:37Z | branch: clean publication branch pending; original Git metadata preserved
+- Feature/bug: codebase health, MiniMax domestic image/video verification, and Pages-safe static demo.
+- Files touched: backend OAuth/media/journey/job modules and tests; frontend upload, routing, demo-data, and static-provider modules; dependency manifests; Pages workflow; README, environment template, and continuity artifacts.
+- Work performed: repaired the lockfile registry, eliminated OAuth login CSRF, redacted precise photo/storage metadata from public DTOs, replaced expiring persisted photo URLs with stable media paths, made paid creates single-shot, unified safe upload limits, made AI polling fail visibly, removed fabricated fallback landmarks, added a credential-free read-only Pages mode, and upgraded vulnerable production dependencies.
+- MiniMax evidence: exactly one image create and one video create were submitted to the mainland host. The image is a valid 1024x1024 JPEG; the video is a valid 512x512 H.264 MP4 at 24 fps and 5.875 seconds. Both match the requested red paper boat scene. The retrieval harness was corrected and its zero-create resume path passed.
+- Tests run: ./init.sh (TypeScript, ESLint, 21 Vitest tests, full production build); npm audit --omit=dev (zero vulnerabilities); static Vite build with /Atlas-Website/ base; Playwright desktop/mobile Home, Explore filtering, journey detail/media, and backend-required notice; source/build key-pattern scans.
+- Result: local codebase, provider, and static deployment gates pass. Browser run observed 28 successful static requests, zero API requests, and zero console errors/warnings. Publishable source/build scans found no key-like values.
+- Residual issues: current development-only Hono Vite adapter and Drizzle Kit compatibility loader account for six moderate full-audit paths; provider jobs remain in-process rather than restart-durable; high-volume uploads should move from bounded Base64 JSON to direct object storage.
+- Next steps: assemble and inspect a clean staging repository, authenticate the intended GitHub account without the invalid environment token, commit/push, enable Pages, wait for Actions, and verify the public URL.
+
+2026-08-01T18:05:55Z | branch: clean publication branch pending; original Git metadata preserved
+- Feature/bug: final release-review security and regression closure.
+- Files touched: api/ai/media.ts and tests, api/ai-router.ts, api/boot.ts, api/journey-public.ts and tests, api/journey-router.ts, src/lib/authRedirect.ts and test, src/hooks/useAuth.ts, vite.config.ts, vitest.config.ts, handoff.md, agent-progress.txt.
+- Work performed: replaced raw upload IDs with short-lived user-bound HMAC capabilities; gated public signing on an extant journey-photo association; verified declared image bytes and dimensions; allowlisted public journey fields; preserved protected OAuth return routes; removed production source-location instrumentation; and fixed frontend test discovery.
+- Tests run: ./init.sh (TypeScript, ESLint, 34 Vitest tests across eight files, full build); exact Pages build and artifact scans; exact-root MiniMax output/resume isolation probes with dummy credentials and zero network requests.
+- Result: both review passes are closed with no remaining P0/P1/P2 release finding. The suite now runs 38 tests across nine files. Real JPEG/PNG/WebP decode, truncated-container rejection, publication limits/replay rejection, and MiniMax repository isolation from an unrelated working directory all pass. An additional `/tmp` versus `/private/tmp` alias probe exposed and then verified closure of a lexical-path bypass; its dummy key produced no generation or artifact. The exact Pages artifact contains no code-path instrumentation, backend endpoint strings, or key pattern. Raw, expired, tampered, and cross-user media identifiers fail before provider signing.
+- Next steps: sync the fixes into the clean staging repository, rerun clean-tree gates and scans, commit/push, enable Pages, and verify the deployed URL.

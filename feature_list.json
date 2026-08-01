@@ -1,0 +1,67 @@
+[
+  {
+    "id": "feature_codebase_health",
+    "category": "quality",
+    "description": "Atlas passes its local type, lint, test, production-build, and critical-route smoke checks after concrete defects are repaired.",
+    "steps": [
+      "Install the locked dependencies without modifying the lockfile",
+      "Run TypeScript project checks and ESLint",
+      "Run the automated test suite",
+      "Build the production frontend and server bundles",
+      "Exercise critical public routes and verify that emitted assets load"
+    ],
+    "passes": true
+  },
+  {
+    "id": "feature_minimax_domestic_image",
+    "category": "integration",
+    "description": "The configured MiniMax mainland-China image-generation API accepts an environment-only credential and produces a valid image artifact.",
+    "steps": [
+      "Confirm the supported domestic endpoint and model against current official documentation",
+      "Submit one minimal low-cost image request without logging or persisting the credential",
+      "Validate the provider response and download the generated artifact",
+      "Verify the image format, dimensions, content, and non-empty hash",
+      "Record only redacted request metadata and evidence"
+    ],
+    "passes": true
+  },
+  {
+    "id": "feature_minimax_domestic_video",
+    "category": "integration",
+    "description": "The configured MiniMax mainland-China video-generation API accepts an environment-only credential and completes a bounded short-video task.",
+    "steps": [
+      "Confirm the supported domestic task, polling, and download contract against current official documentation",
+      "Submit one minimal low-cost video task without logging or persisting the credential",
+      "Poll with bounded retries until the provider reports a terminal state",
+      "Download and verify the video container, codec, duration, frames, and non-empty hash",
+      "Record only redacted task metadata and evidence"
+    ],
+    "passes": true
+  },
+  {
+    "id": "feature_secret_safe_publication",
+    "category": "security",
+    "description": "The publishable source, Git commit, production assets, and documentation contain no supplied API key, local credential, or unrelated repository metadata.",
+    "steps": [
+      "Keep provider credentials in process environment only",
+      "Scan source and generated assets for key and token patterns",
+      "Exclude local environment files, provider artifacts, caches, and existing Git metadata",
+      "Inspect the exact staged tree before committing",
+      "Repeat secret scans against the committed tree"
+    ],
+    "passes": false
+  },
+  {
+    "id": "feature_github_pages_release",
+    "category": "release",
+    "description": "A clean GitHub repository named Atlas-Website hosts the verified Atlas frontend on GitHub Pages with working assets and client-side routes.",
+    "steps": [
+      "Verify the requested repository name is available under the authenticated account",
+      "Create a clean repository without using the broken unrelated local Git metadata",
+      "Commit and push only the verified source and release configuration",
+      "Configure GitHub Pages and wait for its deployment workflow to complete",
+      "Fetch the public URL and verify the home page, assets, and a direct client-side route"
+    ],
+    "passes": false
+  }
+]

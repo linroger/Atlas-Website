@@ -1,0 +1,223 @@
+@import "@fontsource-variable/manrope";
+@import "@fontsource/instrument-serif";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 33% 98%;
+    --foreground: 226 30% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 226 30% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 226 30% 12%;
+    --primary: 226 30% 12%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 220 20% 95%;
+    --secondary-foreground: 226 30% 12%;
+    --muted: 220 20% 95%;
+    --muted-foreground: 224 12% 46%;
+    --accent: 214 90% 56%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 74% 56%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 16% 90%;
+    --input: 220 16% 88%;
+    --ring: 214 90% 56%;
+    --radius: 1.25rem;
+
+    /* Atlas brand hues */
+    --atlas-sky: 199 89% 60%;
+    --atlas-peach: 24 95% 72%;
+    --atlas-lavender: 258 84% 78%;
+    --atlas-mint: 162 64% 62%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    overflow-x: hidden;
+  }
+
+  .font-display {
+    font-family: "Instrument Serif", ui-serif, Georgia, serif;
+  }
+}
+
+@layer components {
+  /* Frosted glass surfaces */
+  .glass {
+    @apply bg-white/60 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_-12px_rgba(31,41,66,0.16)];
+  }
+  .glass-strong {
+    @apply bg-white/80 backdrop-blur-2xl border border-white/70 shadow-[0_12px_40px_-12px_rgba(31,41,66,0.22)];
+  }
+  .glass-subtle {
+    @apply bg-white/40 backdrop-blur-md border border-white/50;
+  }
+
+  /* Brand gradient text */
+  .text-atlas-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      100deg,
+      hsl(var(--atlas-sky)) 0%,
+      hsl(var(--atlas-lavender)) 52%,
+      hsl(var(--atlas-peach)) 100%
+    );
+  }
+
+  /* Soft brand gradient wash for backgrounds */
+  .bg-atlas-wash {
+    background:
+      radial-gradient(60rem 30rem at 12% -6%, hsl(var(--atlas-sky) / 0.14), transparent 60%),
+      radial-gradient(52rem 30rem at 88% 4%, hsl(var(--atlas-peach) / 0.16), transparent 60%),
+      radial-gradient(48rem 28rem at 55% 108%, hsl(var(--atlas-lavender) / 0.15), transparent 60%),
+      hsl(var(--background));
+  }
+
+  .bg-atlas-aurora {
+    background-image: linear-gradient(
+      115deg,
+      hsl(var(--atlas-sky) / 0.9),
+      hsl(var(--atlas-lavender) / 0.9),
+      hsl(var(--atlas-peach) / 0.9)
+    );
+  }
+
+  /* Pill chip */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+  }
+}
+
+@layer utilities {
+  .rounded-atlas {
+    border-radius: 1.5rem;
+  }
+  .rounded-atlas-lg {
+    border-radius: 2rem;
+  }
+  .shadow-soft {
+    box-shadow: 0 10px 40px -14px rgba(31, 41, 66, 0.18);
+  }
+  .shadow-lift {
+    box-shadow: 0 20px 60px -20px rgba(31, 41, 66, 0.28);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.animate-float {
+  animation: float-y 7s ease-in-out infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 3.2s ease-in-out infinite;
+}
+
+@keyframes shimmer-x {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.ai-shimmer {
+  background: linear-gradient(
+    100deg,
+    hsl(var(--atlas-sky) / 0.12) 20%,
+    hsl(var(--atlas-lavender) / 0.3) 50%,
+    hsl(var(--atlas-peach) / 0.12) 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-x 2.8s linear infinite;
+}
+
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-orbit {
+  animation: orbit-spin 14s linear infinite;
+}
+
+@keyframes ken-burns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.12) translate(-1.5%, -1%); }
+}
+.animate-ken-burns {
+  animation: ken-burns 22s ease-in-out infinite alternate;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes ticker-x {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker-x 36s linear infinite;
+}
+
+@keyframes film-bar {
+  0% { transform: scaleX(0); transform-origin: left; }
+  100% { transform: scaleX(1); transform-origin: left; }
+}
+
+/* Video overlays */
+.video-vignette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(246, 248, 252, 0.55) 0%, transparent 26%, transparent 62%, rgba(246, 248, 252, 0.9) 100%);
+}
+
+/* Journey card hover */
+.journey-card {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s;
+}
+.journey-card:hover {
+  transform: translateY(-6px);
+}
+.journey-card:hover .journey-card-img {
+  transform: scale(1.06);
+}
+.journey-card-img {
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}

@@ -1,0 +1,10 @@
+node_modules
+dist
+.git
+.playwright-cli
+.DS_Store
+.env
+.env.*
+!.env.example
+*.swp
+*.log

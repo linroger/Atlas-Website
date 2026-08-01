@@ -1,0 +1,43 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+.playwright-cli/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# Environment variables
+.env
+.env.local
+.env.*.local
+# Local database files (schema migrations are source and must remain trackable)
+*.db
+*.sqlite
+*.sqlite3
+# TypeScript cache
+*.tsbuildinfo
+# Build outputs
+dist/
+build/
+# Test coverage
+coverage/
+.nyc_output/
+# Provider smoke-test artifacts (the runner defaults to a private /tmp folder)
+minimax-smoke-output/
